@@ -18,15 +18,18 @@ public class SessionFilter extends HttpFilter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		System.out.println("session filter");
+
 		HttpServletRequest _request = (HttpServletRequest) request;
 		HttpServletResponse _response = (HttpServletResponse) response;
 		HttpSession session = _request.getSession();
 
 		if (session.getAttribute("id") != null) { // user logged in, access
+			if (session.getAttribute("csrf_token") == null) {
+				session.setAttribute("csrf_token", java.util.UUID.randomUUID().toString());
+			}
 			chain.doFilter(_request, _response);
 		} else {
-			_response.sendRedirect("home");
+			_response.sendRedirect("login");
 		}
 	}
 }

@@ -19,7 +19,12 @@
 		</h1>
 		<h6 class="text-muted text-center mb-4">Sign up with your details</h6>
 		<div class="mb-5 px-3 px-lg-5 py-5 mx-lg-5 shadow-lg bg-white rounded">
-			<form class="px-lg-3" action="" method="POST">
+			<% if (request.getAttribute("error") != null) { %>
+				<div class="alert alert-danger" role="alert">
+					<%= request.getAttribute("error") %>
+				</div>
+			<% } %>
+			<form class="px-lg-3" action="register" method="POST">
 				<div class="form-group text-success h5">
 					<label><b>Full Name</b></label> <input type="text" name="name"
 						class="form-control form-control-sm" pattern="[A-Z a-z]+"

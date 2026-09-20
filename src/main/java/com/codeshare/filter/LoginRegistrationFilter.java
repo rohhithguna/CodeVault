@@ -17,7 +17,7 @@ public class LoginRegistrationFilter extends HttpFilter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		System.out.println("login register filter...");
+
 		HttpServletRequest _request = (HttpServletRequest) request;
 		HttpServletResponse _response = (HttpServletResponse) response;
 
@@ -27,7 +27,7 @@ public class LoginRegistrationFilter extends HttpFilter {
 			_response.sendRedirect("home");
 		} else { // not logged in
 			chain.doFilter(request, response); // go
-			System.out.println("passed!");
+
 		}
 	}
 	

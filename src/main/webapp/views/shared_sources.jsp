@@ -41,10 +41,10 @@ ArrayList<SourceCode> source_list = (ArrayList<SourceCode>) request.getAttribute
 				%>
 				<tr>
 					<th scope="row"><%=i + 1%></th>
-					<td><%=source_list.get(i).getTitle()%></td>
-					<td><%=source_list.get(i).getLanguage()%></td>
+					<td><%=org.apache.commons.text.StringEscapeUtils.escapeHtml4(source_list.get(i).getTitle())%></td>
+					<td><%=org.apache.commons.text.StringEscapeUtils.escapeHtml4(source_list.get(i).getLanguage())%></td>
 					<td><a href="./paste?i=<%=source_list.get(i).getId()%>">Link</a></td>
-					<td><%=source_list.get(i).getCreated_by_name()%></td>
+					<td><%=org.apache.commons.text.StringEscapeUtils.escapeHtml4(source_list.get(i).getCreated_by_name())%></td>
 				</tr>
 				<%
 				}

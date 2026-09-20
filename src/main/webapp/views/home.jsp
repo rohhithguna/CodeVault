@@ -112,7 +112,8 @@ int cur_user = (int) request.getAttribute("cur_user");
 				<div id="editor" style="height: 75vh; max-height: 100vh;"></div>
 			</div>
 			<div class="col-12 col-md-6 col-lg-3 mt-2">
-				<button id="submit_btn" type="submit" class="btn btn-success">Paste</button>
+				<input type="hidden" name="csrf_token" value="<%=session.getAttribute("csrf_token")%>" />
+				<button type="submit" id="submit_btn" class="btn btn-primary">Paste</button>
 			</div>
 		</form>
 	</div>
@@ -155,9 +156,11 @@ int cur_user = (int) request.getAttribute("cur_user");
 					cache : false,
 					timeout : 800000,
 					success : function(data) {
-						$("#paste_form")[0].reset();
-						editor.getSession().setValue("");
-						alert("Source pasted successfully");
+						if (data.success && data.id !== -1) {
+							window.location.href = "paste?i=" + data.id;
+						} else {
+							alert("Error creating paste");
+						}
 					},
 					error : function(e) {
 					}

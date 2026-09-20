@@ -41,8 +41,8 @@ ArrayList<SourceCode> library = (ArrayList<SourceCode>) request.getAttribute("li
 				%>
 				<tr>
 					<th scope="row"><%=i + 1%></th>
-					<td><%=library.get(i).getTitle()%></td>
-					<td><%=library.get(i).getLanguage()%></td>
+					<td><%=org.apache.commons.text.StringEscapeUtils.escapeHtml4(library.get(i).getTitle())%></td>
+					<td><%=org.apache.commons.text.StringEscapeUtils.escapeHtml4(library.get(i).getLanguage())%></td>
 					<td><a href="./paste?i=<%=library.get(i).getId()%>">Link</a></td>
 					<td><input type="checkbox" class="custom-control-input"
 						id="customSwitches<%=library.get(i).getId()%>"

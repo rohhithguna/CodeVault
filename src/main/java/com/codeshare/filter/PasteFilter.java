@@ -23,7 +23,7 @@ public class PasteFilter extends HttpFilter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		System.out.println("paste filter");
+
 		HttpServletRequest _request = (HttpServletRequest) request;
 		HttpServletResponse _response = (HttpServletResponse) response;
 		SourceCodeDAO source_code_dao = new SourceCodeDAO();
@@ -34,27 +34,25 @@ public class PasteFilter extends HttpFilter {
 
 		if (session.getAttribute("id") != null) { // user logged in, all access
 			if (source_code_details.getVisibility() == 1) { // public
-				System.out.println("public");
+
 				chain.doFilter(request, response); // go
 			} else if (source_code_details.getVisibility() == 2) { // protected
 				if (Arrays.asList(source_code_details.getShared_persons()).contains((int) session.getAttribute("id"))) {
-					System.out.println("protected");
+
 					chain.doFilter(request, response); // go
 				} else {
 					_response.sendRedirect("home");
 				}
 			} else { // private
 				if (source_code_details.getCreated_by() == (int) session.getAttribute("id")) {
-					System.out.println("private");
+
 					chain.doFilter(request, response); // go
 				} else {
 					_response.sendRedirect("home");
 				}
 			}
 		} else { // only public access
-			System.out.println("vis: " + source_code_details.getVisibility());
 			if (source_code_details.getVisibility() == 1) { // public
-				System.out.println("public");
 				chain.doFilter(request, response); // go
 			} else {
 				_response.sendRedirect("home");

@@ -18,12 +18,48 @@ public class Paste extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		System.out.println("in paste controller");
+
 		SourceCodeDAO source_code_dao = new SourceCodeDAO();
 		try {
 			if (request.getParameterMap().containsKey("i")) {
 				int id = Integer.parseInt(request.getParameter("i"));
 				SourceCode source_code_details = source_code_dao.getDetailsByID(id);
+
+				if (source_code_details == null) {
+					response.sendRedirect("home");
+					return;
+				}
+
+				int visibility = source_code_details.getVisibility();
+				boolean isAuthorized = false;
+
+				if (visibility == 1) {
+					isAuthorized = true; // Public
+				} else {
+					jakarta.servlet.http.HttpSession session = request.getSession();
+					Integer currentUserId = (Integer) session.getAttribute("id");
+					
+					if (currentUserId != null) {
+						if (source_code_details.getCreated_by() == currentUserId) {
+							isAuthorized = true; // Owner
+						} else if (visibility == 3) {
+							// Protected - check if shared with user
+							if (source_code_details.getShared_persons() != null) {
+								for (int sharedUserId : source_code_details.getShared_persons()) {
+									if (sharedUserId == currentUserId) {
+										isAuthorized = true;
+										break;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				if (!isAuthorized) {
+					response.sendRedirect("home");
+					return;
+				}
 
 				request.setAttribute("details", source_code_details);
 				RequestDispatcher rd = request.getRequestDispatcher("views/show_source.jsp");

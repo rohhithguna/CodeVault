@@ -21,16 +21,14 @@ public class Library extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
-		System.out.println("library controller");
+
 		HttpSession session = request.getSession();
 		SourceCodeDAO source_code_dao = new SourceCodeDAO();
 
 		int cur_user_id = (int) session.getAttribute("id");
 		ArrayList<SourceCode> library = source_code_dao.getLibraryByUser(cur_user_id);
-		System.out.println("Size_x: " + library.size());
-//		for (int i = 0; i < library.size(); i++) {
-//			System.out.println(library.get(i).getLanguage());
-//		}
+
+
 		request.setAttribute("library", library);
 
 		RequestDispatcher rd = request.getRequestDispatcher("views/library.jsp");

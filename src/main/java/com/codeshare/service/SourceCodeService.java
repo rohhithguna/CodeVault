@@ -21,13 +21,26 @@ public class SourceCodeService extends HttpServlet {
 		HttpSession session = request.getSession();
 		SourceCodeDAO source_code_dao = new SourceCodeDAO();
 		if (request.getParameterMap().containsKey("add")) {
-			System.out.println("here in add.....");
+			String sessionToken = (String) session.getAttribute("csrf_token");
+			String requestToken = request.getParameter("csrf_token");
+			if (sessionToken == null || !sessionToken.equals(requestToken)) {
+				// CSRF Token invalid
+				response.sendError(HttpServletResponse.SC_FORBIDDEN, "Invalid CSRF Token");
+				return;
+			}
+			
+
 			String title = request.getParameter("title");
 			int language = Integer.parseInt(request.getParameter("language"));
-			int poster = Integer.parseInt(request.getParameter("poster"));
-			String poster_name = request.getParameter("poster_name");
+			
+			int poster = 0;
+			String poster_name = "";
+			if (session.getAttribute("id") != null) {
+				poster = (Integer) session.getAttribute("id");
+				poster_name = (String) session.getAttribute("name");
+			}
 			String source = request.getParameter("source");
-			System.out.println("poster name: " + poster_name);
+
 			int expire = Integer.parseInt(request.getParameter("expire"));
 			DateProcessing dp = new DateProcessing();
 			java.sql.Timestamp curTimestamp = dp.getCurTimestamp();
@@ -49,12 +62,16 @@ public class SourceCodeService extends HttpServlet {
 				share_with = request.getParameterValues("share_with");
 				visibility = Integer.parseInt(request.getParameter("visibility"));
 			}
-			source_code_dao.addSourceCode(title, language, visibility, source, poster, poster_name,
+			int id = source_code_dao.addSourceCode(title, language, visibility, source, poster, poster_name,
 					curTimestamp.toString(), expTimestamp, 1, share_with);
+			
+			response.setContentType("application/json");
+			java.io.PrintWriter out = response.getWriter();
+			out.print("{\"success\": " + (id != -1) + ", \"id\": " + id + "}");
 		}
 
 		if (request.getParameterMap().containsKey("change_status")) {
-			System.out.println("here.....");
+
 			int id = Integer.parseInt(request.getParameter("id"));
 			source_code_dao.changeStatus(id);
 		}

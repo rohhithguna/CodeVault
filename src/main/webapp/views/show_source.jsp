@@ -22,7 +22,7 @@ SourceCode details = (SourceCode) request.getAttribute("details");
 	<jsp:include page="./header.jsp" />
 	<div class="container-fluid px-lg-5 py-2">
 		<textarea class="form-control form-control-sm" rows="30" cols=""
-			readonly="readonly"><%=details.getSource_code()%></textarea>
+			readonly="readonly"><%=org.apache.commons.text.StringEscapeUtils.escapeHtml4(details.getSource_code())%></textarea>
 	</div>
 	<jsp:include page="./footer.jsp" />
 
