@@ -35,7 +35,6 @@ public class SourceCodeDAO {
 			}
 			stmt.setInt(9, status);
 			int res = stmt.executeUpdate();
-			System.out.println("res: " + res);
 			
 			int last_inserted_id = -1;
 			try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
@@ -50,7 +49,6 @@ public class SourceCodeDAO {
 					shared_with_dao.addSharedWith(last_inserted_id, Integer.parseInt(user_id));
 				}
 			}
-			System.out.println("inserted...");
 			return last_inserted_id;
 		} catch (SQLException e) {
 			System.err.println("Database Error at addSourceCode");

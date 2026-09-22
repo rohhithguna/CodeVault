@@ -40,10 +40,11 @@ public class Paste extends HttpServlet {
 					Integer currentUserId = (Integer) session.getAttribute("id");
 					
 					if (currentUserId != null) {
+						// Allow access if the current user is the owner of the paste
 						if (source_code_details.getCreated_by() == currentUserId) {
 							isAuthorized = true; // Owner
 						} else if (visibility == 3) {
-							// Protected - check if shared with user
+							// Protected - check if the paste has been explicitly shared with the current user
 							if (source_code_details.getShared_persons() != null) {
 								for (int sharedUserId : source_code_details.getShared_persons()) {
 									if (sharedUserId == currentUserId) {
@@ -56,6 +57,7 @@ public class Paste extends HttpServlet {
 					}
 				}
 
+				// If the user does not meet any visibility criteria, deny access
 				if (!isAuthorized) {
 					response.sendRedirect("home");
 					return;
@@ -66,13 +68,10 @@ public class Paste extends HttpServlet {
 				rd.forward(request, response);
 			}
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ServletException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

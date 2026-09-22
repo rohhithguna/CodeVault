@@ -35,6 +35,7 @@ public class LoginService extends HttpServlet {
 		if (loggedInUser == null) {
 			jo.put("login", false);
 		} else {
+			// Establish an authenticated session for the user upon successful login
 			session.setAttribute("id", loggedInUser.getId());
 			session.setAttribute("name", loggedInUser.getName());
 			session.setAttribute("username", loggedInUser.getUsername());
