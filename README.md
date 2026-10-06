@@ -178,3 +178,52 @@ noobs-codeshare/
 - Rate limiting for paste creations to prevent abuse.
 - Full automated testing suite (JUnit/Mockito).
 - HTTPS production deployment configuration.
+
+## Docker Setup
+
+The application is containerized for easy deployment and runs on Apache Tomcat 10 using Java 21.
+
+1. **Build the image:**
+   ```bash
+   docker build -t codevault .
+   ```
+
+2. **Run locally:**
+   ```bash
+   docker run -p 8080:8080 --env-file .env codevault
+   ```
+   *Note: Ensure your database is accessible from within the Docker container (e.g., using `host.docker.internal` or an external IP instead of `localhost` in your `.env` if hosting the DB locally).*
+
+## Render Deployment
+
+This project is prepared for deployment on [Render](https://render.com) using their Docker environment.
+
+**Architecture:**
+GitHub -> Render Web Service -> Docker -> Apache Tomcat -> CodeVault -> External MySQL
+
+**Steps:**
+1. Create a Render account and sign in.
+2. Click **New +** and select **Web Service**.
+3. Connect your GitHub account and select this repository.
+4. Set the **Environment** to `Docker`.
+5. Configure the branch (e.g., `main`).
+6. In the **Environment Variables** section, add the required variables (see below).
+7. Click **Create Web Service** to deploy.
+
+Render will automatically set the `PORT` environment variable, which the Docker container will use to expose the application.
+
+## Database Configuration
+
+The production container requires a remotely accessible MySQL database. You can host this on services like Aiven, AWS RDS, DigitalOcean, or another provider.
+
+Ensure the database allows external connections from Render.
+
+## Environment Variables
+
+For production deployment (e.g., on Render), you must provide the following environment variables. Use the exact variable names shown below:
+
+- `DATABASE_URL`: The JDBC connection string to your remote MySQL instance (e.g., `jdbc:mysql://your-db-host:3306/codevault`)
+- `DB_USERNAME`: Your remote database username
+- `DB_PASSWORD`: Your remote database password
+
+**Warning: Never hardcode or commit actual credentials to the repository or Dockerfile.**
